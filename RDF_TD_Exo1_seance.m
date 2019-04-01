@@ -21,28 +21,28 @@ pxw2 = exp(-(x-mu2).*(x-mu2)/(2*sigma2^2))./sqrt(2*pi*sigma2^2);
 Pw1 = 0.5;
 Pw2 = 1 - Pw1;
 
-%  Tracés des densités de probabilités des 2 classes
+% 1.a. Tracés des densités de probabilités des 2 classes
 figure(1)
 hold on
 plot(x,pxw1,'color','red')
 plot(x,pxw2,'color','blue')
 title('Densités de probabilités des classes (1:rouge, 2:jaune) et les probabilités a posteriori (1:noire, 2:vert)')
 
-%  Ajouter sur le même graphique les probabilités a posteriori
+% 1.b. Ajouter sur le même graphique les probabilités a posteriori
 px = pxw1*Pw1 + pxw2*Pw2;
 Pw1x = pxw1*Pw1./px;
 Pw2x = pxw2*Pw2./px;
 plot(x,Pw1x,'color','black')
 plot(x,Pw2x,'color','green')
 plot(x,px,'color','magenta')
-% En déduire le seuil de classification optimale.
+% 1.c. En déduire le seuil de classification optimale.
 % Seuil sera tel que g1(seuil) = ln(fxw1(seuil|w1)P(w1))=g2(seuil)
 % Graphiquement on voit donc :
 % Seuil1 = 0.5
 % Seuil0.5 = 0.25
 % Seuil2 = 1
 % SeuilSig0.25 = 
-% Probabilité de l'erreur (diapo 43) = 
+% 1.d. Calculer la probabilité d'erreur de classification obtenue (diapo 43):
 xb = 0.5;
 indices = find (x<=xb);
 M = length(indices);
