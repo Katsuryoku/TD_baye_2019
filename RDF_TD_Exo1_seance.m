@@ -26,17 +26,17 @@ figure(1)
 hold on
 plot(x,pxw1,'color','red')
 plot(x,pxw2,'color','blue')
-title('Densités de probabilités des classes (1:rouge, 2:bleue) et les fonction discriminante (1:noire, 2:vert)')
+title('Densités de probabilités des classes (1:rouge, 2:jaune) et les probabilités a posteriori (1:noire, 2:vert)')
 
 % 1.b. Ajouter sur le même graphique les probabilités a posteriori
 px = pxw1*Pw1 + pxw2*Pw2;
-g1 = pxw1*Pw1./px;
-g2 = pxw2*Pw2./px;
-plot(x,g1,'color','black')
-plot(x,g2,'color','green')
+Pw1x = pxw1*Pw1./px;
+Pw2x = pxw2*Pw2./px;
+plot(x,Pw1x,'color','black')
+plot(x,Pw2x,'color','green')
 plot(x,px,'color','magenta')
 % 1.c. En déduire le seuil de classification optimale.
-% Seuil sera tel que g1(seuil) = ln(fxw1(seuil|w1)P(w1))=g2(seuil) diapo : 84/86
+% Seuil sera tel que g1(seuil) = ln(fxw1(seuil|w1)P(w1))=g2(seuil) diapo : 85/86
 % Graphiquement on voit donc :
 % Seuil1 = 0.5
 % Seuil0.5 = 0.25
@@ -65,10 +65,10 @@ title('Densités de probabilités des classes (1:rouge, 2:jaune)')
 
 %  Ajouter sur le même graphique les probabilités à posteriori
 px = pxw1*Pw1 + pxw2*Pw2;
-g1 = pxw1*Pw1./px;
-g2 = pxw2*Pw2./px;
-plot(x,g1,'color','black')
-plot(x,g2,'color','green')
+Pw1x = pxw1*Pw1./px;
+Pw2x = pxw2*Pw2./px;
+plot(x,Pw1x,'color','black')
+plot(x,Pw2x,'color','green')
     
 % Que devient le seuil optimal ? Pourquoi ?
 xb = 1.6;
