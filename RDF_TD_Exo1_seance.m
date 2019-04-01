@@ -36,7 +36,7 @@ plot(x,g1,'color','black')
 plot(x,g2,'color','green')
 plot(x,px,'color','magenta')
 % 1.c. En déduire le seuil de classification optimale.
-% Seuil sera tel que g1(seuil) = ln(fxw1(seuil|w1)P(w1))=g2(seuil)
+% Seuil sera tel que g1(seuil) = ln(fxw1(seuil|w1)P(w1))=g2(seuil) diapo : 84/86
 % Graphiquement on voit donc :
 % Seuil1 = 0.5
 % Seuil0.5 = 0.25
