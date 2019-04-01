@@ -1,7 +1,8 @@
 %% Partie 1 
 clear all;
 close all;
-% Approches : Segmentation par couleur, On extrait des échantillons avec
+%% 1.1 Approches : 
+% Segmentation par couleur, On extrait des échantillons avec
 % de la peau et on fait apprendre la couleur à notre algo.
 %% Apprentissage d'un modèle de peau
 database_dir='George_W_Bush';
@@ -42,7 +43,16 @@ for f = 1:20  %num_files to learn from all images
   % figure;imshow(cim);
 end 
 
-%% Représentation des échantillons dans l'espace des paramètres
+%% 1.2. Avantage & Inconvenients :
+% Les avantages sont : l'algorithme est rapide et permet de facilement
+% trouver les zones sur une image centrée.
+% Les Inconvenients : Cela peut être problèmatique selon la couleur de
+% peau à détecter, l'isolation de l'objet à detecter, l'emplacement de
+% l'objet.
+%% 2.1 Avantage
+% Contrairement à la couleur, ce domaine est moins sensible aux ombres et
+% aux luminences.
+%% 2.3 Représentation des échantillons dans l'espace des paramètres
 figure;
 plot_hist2d(all_data(:,1), all_data(:,2));
 % interprétation de l'histogramme
@@ -50,16 +60,6 @@ plot_hist2d(all_data(:,1), all_data(:,2));
 % ombres comprises dans l'imagette. Mais nous ne devons pas supprimé le
 % plus petit par segmentation car cela pourrait faussé le dévellopement à
 % cause de peau de couleur plus sombre.
-
-%% Avantage & Inconvenients :
-% Les avantages sont : l'algorithme est rapide et permet de facilement
-% trouver les zones sur une image centrée.
-% Les Inconvenients : Cela peut être problèmatique selon la couleur de
-% peau à détecter, l'isolation de l'objet à detecter, l'emplacement de
-% l'objet.
-%% Avantage 2.3.2.1
-% Contrairement à la couleur, ce domaine est moins sensible aux ombres et
-% aux luminences.
 %% Modélisation des données par une gaussienne
 %estimation des paramètres statistiques du modèle à partir des échantillons
 mu1 = mean(all_data)';

@@ -13,3 +13,5 @@ for i = 1:length(cr)
 end
 % %représentation 2D de l'histogramme
 surf(hist2d)
+colormap (cool)
+
