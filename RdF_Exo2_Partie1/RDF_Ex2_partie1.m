@@ -13,7 +13,7 @@ p=0.2 ;
 
 % Image de test
 %inputfile='George_W_Bush/George_W_Bush_0024.jpg';
-inputfile='George_W_Bush/George_W_Bush_0027.jpg';
+inputfile='George_W_Bush/George_W_Bush_0031.jpg';
 I_test=imread(inputfile);
 
 figure;imshow(I_test);
@@ -128,17 +128,18 @@ title('Image p(x/skin)')
 figure();
 p2 = 0.4;
 dodo = SelectPixelsBack('George_W_Bush/George_W_Bush_0027.jpg',p2);
-imshow(dodo);
-figure;imshow(I_test);
+% imshow(dodo);
+% figure;imshow(I_test);
 imycbcr = rgb2ycbcr(I_test);
 
 all_data=[];
 for f = 1:20  %num_files to learn from all images
    im=strcat(database_dir,'/',fnames(f).name) ;  
-   % extraction d'une zone centrale de l'image 
+   % extraction d'une zone centrale de l'image   
    [cim cim2]=SelectPixelsBack(im, p);
    % sortie : cim : composé de 3 matrices correspondant aux 3 plans couleurs 
    % r=cim(:,:,1), g=cim(:,:,2), b=cim(:,:,3)
+   
    subplot(4,5,f)
    imagesc(cim)
    
@@ -157,17 +158,17 @@ for f = 1:20  %num_files to learn from all images
 end
 %% Modélisation des données par une gaussienne
 %estimation des paramètres statistiques du modèle à partir des échantillons
-mu1 = mean(all_data)';
-C1 = cov(all_data);
-C1_inv = C1^(-1);
-dC1 = det(C1);
+mu2 = mean(all_data)';
+C2 = cov(all_data);
+C2_inv = C2^(-1);
+dC2 = det(C2);
 %calcul du modèle dans un plan 2D
 modelegaussien = zeros(256);
 for r = 0:255
    for b = 0:255
        x = [r; b];
        % calcul de la vraisemblance de chaque pixel
-       modelegaussien(r+1,b+1) = GaussLikelihood(x, mu1, C1_inv, dC1);%likelihood=vraisemblance
+       modelegaussien(r+1,b+1) = GaussLikelihood(x, mu2, C2_inv, dC2);%likelihood=vraisemblance
    end
 end
 %représentation de l'histogramme 2D 
@@ -178,3 +179,97 @@ title('Histogramme 2D des échantillons')
 subplot(1,2,2);
 surf(modelegaussien);
 title('Modèle de la densité de probabilité jointe gaussienne de la classe peau')
+
+
+
+%% Application du modèle à des images test
+
+figure();
+
+[m,n,l] = size(I_test);
+%initialisation d'une matrice 2D de la taille de l'image à traiter
+pxnonskin = zeros(m,n);
+for i = 1:m
+   for j = 1:n
+      %extraction des caractéristiques d'un échantillon (=pixel)
+       cr = double(imycbcr(i,j,3));
+       cb = double(imycbcr(i,j,2));
+       x=[cr; cb];
+       % calcul de la vraisemblance de chaque pixel
+       pxnonskin(i,j)=GaussLikelihood(x, mu2, C2_inv, dC2);
+   end
+end
+
+%filtrage moyen pour lisser les valeurs 
+lpf= 1/9*ones(3);
+pxnonskin = filter2(lpf,pxnonskin);
+%normalisation des valeurs de vraisemblance par la valeur max
+pxnonskin = pxnonskin./max(max(pxnonskin));
+
+
+%affichage de l'image résultat
+figure;
+subplot(1,2,1);
+imshow(I_test, [0 1]);
+title('Image RGB initiale')
+subplot(1,2,2);
+imshow(pxnonskin, [0 1]);
+title('Image p(x/skin)')
+
+
+%% variation des p a priori
+figure();
+v = 20/19;
+index = 0;
+for iii = 0:v:20
+    index = index + 1;
+    
+pskin = iii / 20;
+pnonskin = 1 - pskin;
+
+segmentation = pxskin*pskin > pxnonskin*pnonskin;
+
+
+subplot(4,5,index);
+imshow(segmentation,[]);
+title(['pskin = ', num2str(pskin)]);
+
+end
+
+%%
+pskin = 0.5;
+pnonskin = 0.5;
+g1 = log(pxskin) + log(pskin);
+g2 = log(pxnonskin) + log(pnonskin);
+g = g1 - g2;
+frontiere_verticale = diff(sign(g)) ~= 0;
+frontiere_hor = diff(sign(g'))' ~= 0;
+frontiere = frontiere_verticale(:,1:end-1) | frontiere_hor(1:end-1,:);
+
+figure;
+subplot(1,3,1);
+imshow(frontiere_verticale,[]);
+subplot(1,3,2);
+imshow(frontiere_hor,[]);
+subplot(1,3,3);
+imshow(frontiere,[]);
+%%
+clc;
+Ifront = false(250);
+Ifront(1:end-1,1:end-1) = frontiere;
+ItestFront = I_test;
+ItestFrontR = ItestFront(:,:,1);
+ItestFrontG = ItestFront(:,:,2);
+ItestFrontB = ItestFront(:,:,3);
+ItestFrontR(Ifront) = 255;
+ItestFrontG(Ifront) = 255;
+ItestFrontB(Ifront) = 255;
+ItestFront(:,:,1) = ItestFrontR;
+ItestFront(:,:,2) = ItestFrontG;
+ItestFront(:,:,3) = ItestFrontB;
+
+figure;
+subplot(1,2,1);
+imshow(I_test,[]);
+subplot(1,2,2);
+imshow(ItestFront,[]);

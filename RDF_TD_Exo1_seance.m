@@ -24,10 +24,12 @@ Pw2 = 1 - Pw1;
 % 1.a. Tracés des densités de probabilités des 2 classes
 figure(1)
 hold on
-plot(x,pxw1,'color','red')
-plot(x,pxw2,'color','blue')
-title('Densités de probabilités des classes (1:rouge, 2:jaune) et les probabilités a posteriori (1:noire, 2:vert)')
-
+plot(x,pxw1,'color','red','DisplayName', 'classe 1')
+plot(x,pxw2,'color','blue','DisplayName', 'classe 2')
+title('Densités de probabilités des classes')
+legend('show')
+hold off
+%%
 % 1.b. Ajouter sur le même graphique les probabilités a posteriori
 px = pxw1*Pw1 + pxw2*Pw2;
 Pw1x = pxw1*Pw1./px;
